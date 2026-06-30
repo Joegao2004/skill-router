@@ -1,0 +1,7 @@
+interface:
+  display_name: "Skill Router"
+  short_description: "Find and route work to the best installed skills."
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon-large.svg"
+  brand_color: "#1D4ED8"
+  default_prompt: "Use $skill-router to identify the most relevant installed skill for this task."

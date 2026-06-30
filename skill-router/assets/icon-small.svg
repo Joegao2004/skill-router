@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Skill Router icon</title>
+  <desc id="desc">A routed network mark for matching tasks to Codex skills.</desc>
+  <defs>
+    <linearGradient id="bg" x1="64" y1="448" x2="448" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#111827"/>
+      <stop offset="0.54" stop-color="#1D4ED8"/>
+      <stop offset="1" stop-color="#10B981"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#020617" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <g filter="url(#shadow)">
+    <path d="M154 176h98c42 0 76 34 76 76v8" fill="none" stroke="#D1FAE5" stroke-width="30" stroke-linecap="round"/>
+    <path d="M154 336h92c46 0 82-36 82-82v-2" fill="none" stroke="#BFDBFE" stroke-width="30" stroke-linecap="round"/>
+    <path d="M314 194l46 46-46 46" fill="none" stroke="#F8FAFC" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="142" cy="176" r="38" fill="#F8FAFC"/>
+    <circle cx="142" cy="336" r="38" fill="#F8FAFC"/>
+    <circle cx="372" cy="240" r="44" fill="#F8FAFC"/>
+    <circle cx="142" cy="176" r="14" fill="#1D4ED8"/>
+    <circle cx="142" cy="336" r="14" fill="#10B981"/>
+    <circle cx="372" cy="240" r="16" fill="#111827"/>
+  </g>
+</svg>
