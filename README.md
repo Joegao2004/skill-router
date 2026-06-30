@@ -16,6 +16,7 @@ Skill Router is a Codex skill that helps an agent choose the best installed skil
 
 - Scans installed `SKILL.md` files from common Codex skill roots.
 - Parses each skill's `name` and `description` metadata.
+- Supports single-line and folded/literal multiline YAML frontmatter descriptions.
 - Ranks candidate skills with deterministic token matching.
 - Deduplicates repeated plugin-cache copies.
 - Reports query-token coverage so weak matches are easy to spot.

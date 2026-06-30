@@ -65,6 +65,8 @@ ALIASES = {
     "builder": "build",
     "building": "build",
     "built": "build",
+    "college": "academic",
+    "collegiate": "academic",
     "created": "create",
     "creates": "create",
     "creating": "create",
@@ -79,6 +81,11 @@ ALIASES = {
     "router": "route",
     "routes": "route",
     "routing": "route",
+    "universities": "academic",
+    "university": "academic",
+    "writes": "write",
+    "writing": "write",
+    "written": "write",
 }
 
 
@@ -100,13 +107,42 @@ def parse_frontmatter(text: str) -> dict[str, str]:
         return {}
 
     data: dict[str, str] = {}
-    for raw_line in match.group(1).splitlines():
+    lines = match.group(1).splitlines()
+    index = 0
+    while index < len(lines):
+        raw_line = lines[index]
         line = raw_line.strip()
         if not line or line.startswith("#") or ":" not in line:
+            index += 1
             continue
+
+        # Ignore nested mapping entries unless they are part of a block scalar.
+        if raw_line[:1].isspace():
+            index += 1
+            continue
+
         key, value = line.split(":", 1)
-        value = value.strip().strip("\"'")
-        data[key.strip()] = value
+        key = key.strip()
+        value = value.strip()
+
+        if value in {">", "|"}:
+            block_lines: list[str] = []
+            index += 1
+            while index < len(lines):
+                candidate = lines[index]
+                if candidate.strip() and not candidate[:1].isspace() and ":" in candidate:
+                    break
+                if candidate.strip():
+                    block_lines.append(candidate.strip())
+                index += 1
+            if value == ">":
+                data[key] = " ".join(block_lines)
+            else:
+                data[key] = "\n".join(block_lines)
+            continue
+
+        data[key] = value.strip("\"'")
+        index += 1
     return data
 
 
