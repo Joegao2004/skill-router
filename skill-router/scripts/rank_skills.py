@@ -69,6 +69,12 @@ ALIASES = {
     "creates": "create",
     "creating": "create",
     "creator": "create",
+    "extracted": "extract",
+    "extracting": "extract",
+    "extraction": "extract",
+    "reviewed": "review",
+    "reviewing": "review",
+    "reviews": "review",
     "routed": "route",
     "router": "route",
     "routes": "route",
@@ -83,6 +89,9 @@ class Skill:
     path: Path
     score: float = 0.0
     reasons: tuple[str, ...] = ()
+    coverage: float = 0.0
+    matched_tokens: tuple[str, ...] = ()
+    unmatched_tokens: tuple[str, ...] = ()
 
 
 def parse_frontmatter(text: str) -> dict[str, str]:
@@ -107,7 +116,9 @@ def normalize_token(token: str) -> str:
         return ALIASES[token]
     if len(token) > 4 and token.endswith("ies"):
         return token[:-3] + "y"
-    if len(token) > 4 and token.endswith("es") and not token.endswith("ses"):
+    if len(token) > 4 and token.endswith(("ches", "shes")):
+        return token[:-2]
+    if len(token) > 4 and token.endswith(("xes", "zes")):
         return token[:-2]
     if len(token) > 3 and token.endswith("s") and not token.endswith("ss"):
         return token[:-1]
@@ -209,7 +220,7 @@ def dedupe_skills(skills: Iterable[Skill]) -> list[Skill]:
 
 
 def rank(skills: list[Skill], query: str) -> list[Skill]:
-    query_tokens = tokenize(query)
+    query_tokens = list(dict.fromkeys(tokenize(query)))
     if not query_tokens:
         return skills
 
@@ -236,9 +247,11 @@ def rank(skills: list[Skill], query: str) -> list[Skill]:
 
         score = 0.0
         reasons: list[str] = []
+        matched_tokens: list[str] = []
         for token in query_tokens:
             if token not in token_counts:
                 continue
+            matched_tokens.append(token)
             idf = math.log((doc_count + 1) / (df.get(token, 0) + 1)) + 1
             token_factor = 0.25 if token == "skill" else 1.0
             weight = 1.0
@@ -260,6 +273,7 @@ def rank(skills: list[Skill], query: str) -> list[Skill]:
             reasons.append("exact-phrase")
 
         if score > 0:
+            unmatched_tokens = [token for token in query_tokens if token not in matched_tokens]
             ranked.append(
                 Skill(
                     name=skill.name,
@@ -267,6 +281,9 @@ def rank(skills: list[Skill], query: str) -> list[Skill]:
                     path=skill.path,
                     score=round(score, 3),
                     reasons=tuple(dict.fromkeys(reasons)),
+                    coverage=round(len(set(matched_tokens)) / len(query_tokens), 3),
+                    matched_tokens=tuple(dict.fromkeys(matched_tokens)),
+                    unmatched_tokens=tuple(unmatched_tokens),
                 )
             )
 
@@ -305,6 +322,9 @@ def main() -> int:
                         "description": skill.description,
                         "path": str(skill.path),
                         "reasons": list(skill.reasons),
+                        "coverage": skill.coverage,
+                        "matched_tokens": list(skill.matched_tokens),
+                        "unmatched_tokens": list(skill.unmatched_tokens),
                     }
                     for skill in results
                 ],
@@ -318,10 +338,26 @@ def main() -> int:
         print("No matching installed skills found.")
         return 0
 
+    if results[0].coverage < 0.5:
+        print(
+            "Warning: low query-token coverage. A dedicated installed skill may not exist; "
+            "use judgment before routing."
+        )
+        print()
+
     for index, skill in enumerate(results, start=1):
         print(f"{index}. {skill.name}  score={skill.score}")
         print(f"   path: {skill.path}")
         print(f"   why: {', '.join(skill.reasons) if skill.reasons else 'matched query'}")
+        print(
+            f"   coverage: {len(skill.matched_tokens)}/"
+            f"{len(skill.matched_tokens) + len(skill.unmatched_tokens)} tokens"
+            + (
+                f"; unmatched: {', '.join(skill.unmatched_tokens)}"
+                if skill.unmatched_tokens
+                else ""
+            )
+        )
         print(f"   description: {skill.description}")
     return 0
 

@@ -18,6 +18,7 @@ Skill Router is a Codex skill that helps an agent choose the best installed skil
 - Parses each skill's `name` and `description` metadata.
 - Ranks candidate skills with deterministic token matching.
 - Deduplicates repeated plugin-cache copies.
+- Reports query-token coverage so weak matches are easy to spot.
 - Gives the agent a compact routing workflow before it reads the selected skill.
 
 ## When To Use It
@@ -79,10 +80,11 @@ python skill-router/scripts/rank_skills.py "summarize a Google Doc" --json
 1. gh-fix-ci  score=134.591
    path: .../github/skills/gh-fix-ci/SKILL.md
    why: name:fix, description:failing, description:github, description:action
+   coverage: 4/4 tokens
    description: Use when a user asks to debug or fix failing GitHub PR checks...
 ```
 
-The score is a starting point. The agent should still apply judgment, prefer narrower skills when appropriate, and read the selected `SKILL.md` before acting.
+The score is a starting point. The agent should still apply judgment, prefer narrower skills when appropriate, and read the selected `SKILL.md` before acting. If the script prints a low coverage warning, a dedicated installed skill may not exist.
 
 ## Repository Layout
 
