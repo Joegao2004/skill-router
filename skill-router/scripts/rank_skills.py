@@ -327,6 +327,55 @@ def rank(skills: list[Skill], query: str) -> list[Skill]:
     return ranked
 
 
+def confidence_for(results: list[Skill]) -> str:
+    if not results:
+        return "none"
+
+    top = results[0]
+    second_score = results[1].score if len(results) > 1 else 0.0
+    margin = top.score / second_score if second_score else 999.0
+
+    if top.coverage >= 0.6 and margin >= 1.2:
+        return "strong"
+    if top.coverage >= 0.5 or margin >= 2.3:
+        return "medium"
+    return "weak"
+
+
+def diagnostic_note(results: list[Skill]) -> tuple[str, str, str]:
+    if not results:
+        return (
+            "none",
+            "No installed skill metadata matched the query tokens.",
+            "Use a general approach or install/create a dedicated skill.",
+        )
+
+    top = results[0]
+    confidence = confidence_for(results)
+    gaps = ", ".join(top.unmatched_tokens) if top.unmatched_tokens else "none"
+
+    if confidence == "strong":
+        why = (
+            f"`{top.name}` has broad token coverage and a clear lead over other candidates."
+        )
+        next_step = f"Read `{top.path}` before using the skill."
+    elif confidence == "medium":
+        why = (
+            f"`{top.name}` is plausible, but unmatched terms remain: {gaps}."
+        )
+        next_step = "Inspect the candidate skill description and apply judgment before routing."
+    else:
+        why = (
+            f"`{top.name}` is only a weak metadata match; unmatched terms: {gaps}."
+        )
+        next_step = (
+            "A dedicated installed skill may not exist, or the expected skill may need "
+            "a better description."
+        )
+
+    return confidence, why, next_step
+
+
 def parse_roots(raw_roots: str | None) -> list[Path]:
     if not raw_roots:
         return default_roots()
@@ -395,6 +444,14 @@ def main() -> int:
             )
         )
         print(f"   description: {skill.description}")
+
+    confidence, why, next_step = diagnostic_note(results)
+    print()
+    print("Diagnosis:")
+    print(f"   best_candidate: {results[0].name}")
+    print(f"   confidence: {confidence}")
+    print(f"   why: {why}")
+    print(f"   next_step: {next_step}")
     return 0
 
 

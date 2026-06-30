@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 320" role="img" aria-labelledby="title desc">
-  <title id="title">Skill Router wordmark</title>
-  <desc id="desc">Skill Router wordmark with a routed node symbol.</desc>
+  <title id="title">Skill Finder wordmark</title>
+  <desc id="desc">Skill Finder wordmark with a routed node symbol.</desc>
   <defs>
     <linearGradient id="mark" x1="40" y1="280" x2="280" y2="40" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#111827"/>
@@ -23,8 +23,8 @@
   <circle cx="104" cy="112" r="9" fill="#1D4ED8"/>
   <circle cx="104" cy="208" r="9" fill="#10B981"/>
   <circle cx="244" cy="162" r="11" fill="#111827"/>
-  <text x="330" y="145" fill="#111827" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="68" font-weight="800">Skill Router</text>
-  <text x="333" y="202" fill="#475569" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="28" font-weight="500">Find the right Codex skill before the work begins.</text>
+  <text x="330" y="145" fill="#111827" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="68" font-weight="800">Skill Finder</text>
+  <text x="333" y="202" fill="#475569" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="28" font-weight="500">Find, explain, and improve Codex skill matches.</text>
   <path d="M334 238h208c40 0 64-28 96-28h190" fill="none" stroke="url(#line)" stroke-width="10" stroke-linecap="round"/>
   <circle cx="334" cy="238" r="8" fill="#1D4ED8"/>
   <circle cx="640" cy="210" r="8" fill="#10B981"/>

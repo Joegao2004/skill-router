@@ -1,32 +1,56 @@
 ---
 name: skill-router
-description: Identify and route a user's current task to the most relevant installed Codex skill. Use when the user asks which skill to use, asks to select/route/recommend a skill, forgets what skills are installed, is unsure whether a skill exists, or explicitly wants the agent to inspect installed skills before working.
+description: Discover, compare, and diagnose installed Codex skills and their routing metadata. Use when the user asks what skills are installed, which skill might fit a task, why a skill was not found or did not trigger, how to improve a skill description, or when an explicit skill-routing recommendation needs evidence. This skill is a finder and routing doctor, not an automatic platform-level dispatcher.
 ---
 
-# Skill Router
+# Skill Finder
 
-Use this skill to choose the best installed skill for the current user request, then continue the task with that skill's instructions.
+Use this skill to inspect installed skills, explain routing evidence, and diagnose why a task did or did not match a skill. Treat it as a discovery and metadata-debugging tool, not as an authority that can automatically choose the right skill without judgment.
+
+## Operating Modes
+
+- **Find**: identify likely installed skills for a task.
+- **Explain**: show why candidates matched, including matched and missing query terms.
+- **Diagnose**: explain why an expected skill did not appear or ranked poorly.
+- **Improve**: suggest concrete `description` wording that would make a skill easier to discover.
+- **Route**: recommend the best next skill only when the evidence is strong enough, then read that skill's `SKILL.md` before doing the user's task.
 
 ## Workflow
 
-1. Restate the task as a short search query.
-2. Check the skills already listed in the current conversation context. If one clearly matches, choose it.
-3. If the match is unclear, run `scripts/rank_skills.py "<task query>" --top 8` from this skill directory.
-4. Compare candidates by task fit, not just score:
-   - Prefer skills whose description names the user's artifact, platform, tool, or workflow.
-   - Prefer narrower skills over broad umbrella skills when both match.
-   - Use the minimum skill set needed. Multiple skills are appropriate only when the task naturally crosses domains.
-   - Do not choose this skill as the final destination unless the user's task is only skill discovery.
-5. Read the selected skill's `SKILL.md` completely before acting. If it references task-relevant files, read only those referenced files.
-6. Announce the selected skill briefly, then perform the user's task. Do not stop at a recommendation when the user asked for an actionable outcome.
+1. Restate the user's task as a compact search query. For non-English requests, include a small English intent gloss when helpful.
+2. If the user explicitly names a skill, respect that signal first. Read that skill's `SKILL.md`, then use this skill only to explain fit or metadata gaps.
+3. Run `scripts/rank_skills.py "<task query>" --top 8` when the match is unclear or when the user wants evidence.
+4. Interpret the results:
+   - High coverage and a specific description usually means a good candidate.
+   - Low coverage means the installed metadata may not cover the user's wording or no dedicated skill exists.
+   - Broad skills can rank for generic words such as "write", "build", or "report"; do not treat that alone as strong evidence.
+   - Prefer a narrower skill over a broad umbrella skill when both match the artifact, tool, or workflow.
+5. When diagnosing a miss, inspect the expected skill's frontmatter:
+   - Check whether `description` is present, readable, and not hidden by unusual YAML.
+   - Compare the user's words with the skill's trigger words.
+   - Suggest 1-3 concrete phrases to add to the description.
+6. Only after choosing a target skill, read the selected skill's `SKILL.md` completely and follow its instructions.
 
-## Ambiguity Rules
+## Output Shape
 
-Ask one concise clarification only when the top candidates imply meaningfully different actions or external side effects. Otherwise, make a conservative choice and proceed.
+For skill discovery, answer with:
 
-If no installed skill fits, say that no dedicated installed skill appears to match, then use the best general approach.
+```text
+Best candidate: <skill-name>
+Confidence: strong | medium | weak
+Why: <short evidence>
+Gaps: <missing terms or reason for caution>
+Next step: <read/use skill, ask clarification, or proceed without a dedicated skill>
+```
 
-If the selected skill cannot be read or its required tools are unavailable, state the blocker briefly and continue with the closest fallback.
+For metadata diagnosis, answer with:
+
+```text
+Expected skill: <skill-name>
+Diagnosis: <why it did or did not match>
+Metadata issue: <specific problem>
+Suggested description addition: <exact phrase>
+```
 
 ## Helper Script
 
@@ -43,4 +67,4 @@ python scripts/rank_skills.py "build an ESP32 app" --roots "C:\Users\Lenovo\.cod
 python scripts/rank_skills.py "fix failing GitHub Actions" --json
 ```
 
-The script scans installed `SKILL.md` files, parses `name` and `description`, and ranks candidates using deterministic token matching. Treat the output as evidence, then apply judgment.
+The script scans installed `SKILL.md` files, parses `name` and `description`, ranks candidates, deduplicates plugin-cache copies, reports query-token coverage, and prints a diagnosis note. Treat the output as evidence, then apply judgment.

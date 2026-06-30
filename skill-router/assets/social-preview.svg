@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
-  <title id="title">Skill Router preview</title>
-  <desc id="desc">A GitHub preview image for Skill Router.</desc>
+  <title id="title">Skill Finder preview</title>
+  <desc id="desc">A GitHub preview image for Skill Finder.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="630" x2="1200" y2="0" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#0F172A"/>
@@ -30,14 +30,14 @@
     <circle cx="216" cy="214" r="13" fill="#1D4ED8"/>
     <circle cx="216" cy="326" r="13" fill="#10B981"/>
     <circle cx="420" cy="286" r="15" fill="#0F172A"/>
-    <text x="470" y="225" fill="#0F172A" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="78" font-weight="850">Skill Router</text>
-    <text x="474" y="292" fill="#475569" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="32" font-weight="500">Route Codex work to the right skill.</text>
+    <text x="470" y="225" fill="#0F172A" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="78" font-weight="850">Skill Finder</text>
+    <text x="474" y="292" fill="#475569" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="32" font-weight="500">Find and diagnose Codex skill matches.</text>
     <rect x="474" y="344" width="178" height="52" rx="26" fill="#DBEAFE"/>
     <text x="504" y="379" fill="#1D4ED8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="750">scan</text>
     <rect x="672" y="344" width="186" height="52" rx="26" fill="#D1FAE5"/>
     <text x="702" y="379" fill="#047857" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="750">rank</text>
     <rect x="878" y="344" width="156" height="52" rx="26" fill="#E2E8F0"/>
-    <text x="908" y="379" fill="#334155" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="750">route</text>
+    <text x="902" y="379" fill="#334155" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="750">explain</text>
     <path d="M474 444h132c38 0 62-24 96-24h110c36 0 58 24 92 24h130" fill="none" stroke="url(#accent)" stroke-width="10" stroke-linecap="round"/>
     <circle cx="474" cy="444" r="9" fill="#1D4ED8"/>
     <circle cx="706" cy="420" r="9" fill="#10B981"/>

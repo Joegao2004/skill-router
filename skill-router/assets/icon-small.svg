@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
-  <title id="title">Skill Router icon</title>
-  <desc id="desc">A routed network mark for matching tasks to Codex skills.</desc>
+  <title id="title">Skill Finder icon</title>
+  <desc id="desc">A routed network mark for finding and diagnosing Codex skills.</desc>
   <defs>
     <linearGradient id="bg" x1="64" y1="448" x2="448" y2="64" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#111827"/>

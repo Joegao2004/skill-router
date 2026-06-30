@@ -1,7 +1,7 @@
-# Skill Router
+# Skill Finder
 
 <p align="center">
-  <img src="skill-router/assets/social-preview.svg" alt="Skill Router preview" width="100%">
+  <img src="skill-router/assets/social-preview.svg" alt="Skill Finder preview" width="100%">
 </p>
 
 <p align="center">
@@ -10,7 +10,9 @@
   <img alt="Python" src="https://img.shields.io/badge/python-3.9%2B-334155">
 </p>
 
-Skill Router is a Codex skill that helps an agent choose the best installed skill for the user's current task. It is useful when the user does not remember which skills are installed, is unsure which one applies, or wants Codex to inspect local skills before doing the work.
+Skill Finder is a Codex skill for discovering, comparing, and diagnosing installed Codex skills. The package name remains `skill-router` for compatibility, but the goal is more precise: it helps explain which skill might fit, why a skill did not show up, and how skill metadata can be improved.
+
+It is not a platform-level automatic dispatcher. A Codex skill cannot make itself run before it is invoked. Use this as a finder and routing doctor when you want evidence, not as a guarantee that the correct skill will always be selected.
 
 ## What It Does
 
@@ -20,17 +22,19 @@ Skill Router is a Codex skill that helps an agent choose the best installed skil
 - Ranks candidate skills with deterministic token matching.
 - Deduplicates repeated plugin-cache copies.
 - Reports query-token coverage so weak matches are easy to spot.
-- Gives the agent a compact routing workflow before it reads the selected skill.
+- Prints a short diagnosis with confidence, evidence, gaps, and a recommended next step.
+- Helps identify metadata problems such as missing trigger words or unreadable descriptions.
 
-## When To Use It
+## Good Uses
 
 Use `$skill-router` when a prompt sounds like:
 
 ```text
-Which skill should I use for this?
-Find the best installed skill for fixing GitHub Actions.
-Route this task to the right skill.
-I forgot what skills I have installed.
+Which installed skill might fit this task?
+Why did academic-research-suite not show up?
+Do I have a skill for ESP32 work?
+Find skills related to GitHub Actions failures.
+Suggest better description wording for this skill.
 ```
 
 ## Install
@@ -60,7 +64,7 @@ The install commands copy only the `skill-router/` folder, which is the actual C
 In Codex:
 
 ```text
-Use $skill-router to identify the most relevant installed skill for this task: debug a failing GitHub Actions check.
+Use $skill-router to find and diagnose installed skills for this task: debug a failing GitHub Actions check.
 ```
 
 Run the helper script directly:
@@ -78,42 +82,37 @@ python skill-router/scripts/rank_skills.py "summarize a Google Doc" --json
 ## Example Output
 
 ```text
-1. gh-fix-ci  score=134.591
+1. gh-fix-ci  score=175.304
    path: .../github/skills/gh-fix-ci/SKILL.md
-   why: name:fix, description:failing, description:github, description:action
-   coverage: 4/4 tokens
+   why: name:fix, description:failing, description:github, description:action, description:check, description:pr
+   coverage: 6/6 tokens
    description: Use when a user asks to debug or fix failing GitHub PR checks...
+
+Diagnosis:
+   best_candidate: gh-fix-ci
+   confidence: strong
+   why: `gh-fix-ci` has broad token coverage and a clear lead over other candidates.
+   next_step: Read `.../gh-fix-ci/SKILL.md` before using the skill.
 ```
 
-The score is a starting point. The agent should still apply judgment, prefer narrower skills when appropriate, and read the selected `SKILL.md` before acting. If the script prints a low coverage warning, a dedicated installed skill may not exist.
+If coverage is low, the expected skill may not exist or may need better metadata. That is a useful result, not a failure.
 
 ## Repository Layout
 
 ```text
 .
-├── README.md
-├── LICENSE
-└── skill-router/
-    ├── SKILL.md
-    ├── agents/
-    │   └── openai.yaml
-    ├── assets/
-    │   ├── icon-small.svg
-    │   ├── icon-large.svg
-    │   └── social-preview.svg
-    └── scripts/
-        └── rank_skills.py
-```
-
-## Publish To GitHub
-
-From this folder:
-
-```bash
-git init
-git add .
-git commit -m "Publish skill-router"
-gh repo create skill-router --public --source . --remote origin --push
+|-- README.md
+|-- LICENSE
+`-- skill-router/
+    |-- SKILL.md
+    |-- agents/
+    |   `-- openai.yaml
+    |-- assets/
+    |   |-- icon-small.svg
+    |   |-- icon-large.svg
+    |   `-- social-preview.svg
+    `-- scripts/
+        `-- rank_skills.py
 ```
 
 ## Validate
@@ -124,4 +123,4 @@ If you have the Codex `skill-creator` validation script available:
 python path/to/skill-creator/scripts/quick_validate.py skill-router
 ```
 
-The skill is intentionally small: the long-form public documentation lives in this README, while the installed skill stays compact for Codex context efficiency.
+The installed skill stays compact for Codex context efficiency. This README carries the longer public explanation.
