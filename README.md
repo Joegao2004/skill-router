@@ -38,7 +38,7 @@ Clone this repository, then copy the `skill-router` folder into your Codex skill
 ### macOS or Linux
 
 ```bash
-git clone https://github.com/YOUR-ORG/skill-router.git
+git clone https://github.com/Joegao2004/skill-router.git
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
 cp -R skill-router/skill-router "${CODEX_HOME:-$HOME/.codex}/skills/skill-router"
 ```
@@ -46,12 +46,12 @@ cp -R skill-router/skill-router "${CODEX_HOME:-$HOME/.codex}/skills/skill-router
 ### Windows PowerShell
 
 ```powershell
-git clone https://github.com/YOUR-ORG/skill-router.git
+git clone https://github.com/Joegao2004/skill-router.git
 New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.codex\skills" | Out-Null
 Copy-Item -Recurse -Force .\skill-router\skill-router "$env:USERPROFILE\.codex\skills\skill-router"
 ```
 
-Replace `YOUR-ORG/skill-router` with your published repository path.
+The install commands copy only the `skill-router/` folder, which is the actual Codex skill.
 
 ## Usage
 
